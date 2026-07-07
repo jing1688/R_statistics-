@@ -1,0 +1,44 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="R 統計學教室第 1 章：RStudio 與 Posit Cloud 基礎"><title>第 1 章｜RStudio 與 Posit Cloud 基礎｜R 統計學教室</title><link rel="stylesheet" href="../assets/css/style.css"></head><body data-chapter="01"><header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark">R</span><span>R 統計學教室</span></a><div class="header-actions"><a class="header-link" href="../index.html">回首頁</a><button id="menu-button" class="menu-button" type="button">☰ 目錄</button></div></header><div class="site-layout"><aside class="sidebar"><p class="sidebar-title">Course Menu</p><ul id="chapter-nav" class="chapter-nav"></ul></aside><main class="content"><section class="hero"><p class="eyebrow">Chapter 01</p><h1>RStudio 與 Posit Cloud 基礎</h1><p class="lead">認識 R、RStudio、Posit Cloud 與基本語法</p></section>
+<section><h2 id="what-is-r">1. 什麼是 R？</h2><p>R 是專為統計分析、資料視覺化與資料科學設計的程式語言。</p><ul><li>免費且開源</li><li>內建大量統計函數</li><li>擁有完整的 CRAN 套件生態系</li><li>適合研究與商業資料分析</li></ul></section>
+<section><h2 id="rstudio">2. RStudio 與 Posit Cloud</h2><p>RStudio 是常用的 R 開發環境；Posit Cloud 則可直接在瀏覽器執行 R。</p><h3 id="interface">RStudio 介面</h3><ul><li><strong>Source：</strong>撰寫與保存程式碼</li><li><strong>Console：</strong>即時執行指令</li><li><strong>Environment：</strong>查看物件與資料</li><li><strong>Files / Plots / Packages / Help：</strong>管理檔案、圖表、套件與說明</li></ul><div class="callout">不想安裝軟體時，可以前往 <a href="https://posit.cloud" target="_blank" rel="noopener">Posit Cloud</a>。</div></section>
+<section><h2 id="syntax">3. R 基本語法</h2><h3 id="variables">變數與指定</h3><pre><code>name &lt;- &quot;Alice&quot;
+age &lt;- 20
+height &lt;- 165.5
+is_student &lt;- TRUE
+
+print(name)</code></pre><p>R 最常使用 <code>&lt;-</code> 指定變數。</p><h3 id="vector">向量</h3><pre><code>scores &lt;- c(85, 90, 78, 92)
+
+scores[1]        # R 的索引從 1 開始
+mean(scores)
+length(scores)</code></pre><div class="callout"><strong>注意：</strong>R 的索引從 1 開始，和 Python 從 0 開始不同。</div><h3 id="condition">條件判斷</h3><pre><code>score &lt;- 92
+
+if (score &gt;= 90) {
+  print(&quot;優異&quot;)
+} else {
+  print(&quot;普通&quot;)
+}</code></pre><h3 id="loop">迴圈</h3><pre><code>for (score in scores) {
+  print(score)
+}</code></pre><h3 id="function">函式</h3><pre><code>add &lt;- function(a, b) {
+  return(a + b)
+}
+
+add(3, 5)</code></pre></section>
+<section><h2 id="structures">4. 常見資料結構</h2><h3 id="list">List</h3><pre><code>student &lt;- list(
+  name = &quot;Alice&quot;,
+  age = 20,
+  score = 90
+)
+
+student$name</code></pre><h3 id="dataframe">Data Frame</h3><pre><code>students &lt;- data.frame(
+  name = c(&quot;Alice&quot;, &quot;Bob&quot;, &quot;Carol&quot;),
+  score = c(90, 82, 95)
+)
+
+students</code></pre></section>
+<section><h2 id="packages">5. 安裝與載入套件</h2><pre><code># 第一次使用時安裝
+install.packages(&quot;tidyverse&quot;)
+
+# 每次開啟 R 後載入
+library(tidyverse)</code></pre><div class="callout">套件通常只需安裝一次，但每次重新開啟 R 都要使用 <code>library()</code> 載入。</div></section>
+<section><h2 id="summary">本章重點整理</h2><ul><li>R 適合統計分析與視覺化</li><li>RStudio 與 Posit Cloud 都能執行 R</li><li>R 常用 <code>&lt;-</code> 指定變數，索引從 1 開始</li><li>常見結構包含向量、List 與 Data Frame</li></ul></section>
+<section><h2 id="practice">練習題</h2><ol><li>建立五個成績的向量並計算平均數。</li><li>建立包含姓名、年齡與成績的資料框。</li><li>撰寫一個回傳兩數較大值的函式。</li></ol></section><nav class="chapter-pagination"><a href="../index.html"><span class="pagination-label">← 返回</span><span class="pagination-title">課程首頁</span></a><a href="ch02.html"><span class="pagination-label">下一章 →</span><span class="pagination-title">第 2 章｜資料讀取與繪圖</span></a></nav><footer class="site-footer">© <span id="current-year"></span> R 統計學教室．Built for GitHub Pages.</footer></main><aside class="page-toc"><p class="toc-title">On This Page</p><ul id="page-toc-list"></ul></aside></div><div id="backdrop" class="backdrop"></div><script src="../assets/js/site.js"></script></body></html>

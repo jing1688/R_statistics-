@@ -1,0 +1,59 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="R 統計學教室第 2 章：資料讀取與繪圖"><title>第 2 章｜資料讀取與繪圖｜R 統計學教室</title><link rel="stylesheet" href="../assets/css/style.css"></head><body data-chapter="02"><header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark">R</span><span>R 統計學教室</span></a><div class="header-actions"><a class="header-link" href="../index.html">回首頁</a><button id="menu-button" class="menu-button" type="button">☰ 目錄</button></div></header><div class="site-layout"><aside class="sidebar"><p class="sidebar-title">Course Menu</p><ul id="chapter-nav" class="chapter-nav"></ul></aside><main class="content"><section class="hero"><p class="eyebrow">Chapter 02</p><h1>資料讀取與繪圖</h1><p class="lead">使用 readr、readxl、Base R 與 ggplot2 讀取及呈現資料</p></section>
+<section><h2 id="read-csv">1. 讀取 CSV</h2><h3 id="base-csv">Base R</h3><pre><code>df &lt;- read.csv(
+  &quot;data.csv&quot;,
+  fileEncoding = &quot;UTF-8&quot;
+)
+
+head(df)</code></pre><h3 id="readr-csv">readr</h3><pre><code>library(readr)
+
+df &lt;- read_csv(&quot;data.csv&quot;)
+head(df)</code></pre><div class="callout">中文亂碼時，可依檔案編碼嘗試 UTF-8、UTF-8-BOM 或 Big5。</div></section>
+<section><h2 id="read-excel">2. 讀取 Excel</h2><pre><code>install.packages(&quot;readxl&quot;)
+library(readxl)
+
+df &lt;- read_excel(
+  &quot;data.xlsx&quot;,
+  sheet = &quot;Sheet1&quot;
+)
+
+head(df)</code></pre><p><code>sheet</code> 可以填工作表名稱，也可用數字指定位置。</p></section>
+<section><h2 id="inspect">3. 初步檢查資料</h2><pre><code>head(df)       # 前六筆
+tail(df)       # 後六筆
+dim(df)        # 列數與欄數
+names(df)      # 欄位名稱
+str(df)        # 資料結構
+summary(df)    # 摘要統計</code></pre><div class="callout">剛讀入資料時，至少先執行 <code>head()</code>、<code>str()</code> 與 <code>summary()</code>。</div></section>
+<section><h2 id="base-plot">4. 使用 Base R 繪圖</h2><h3 id="line">折線圖</h3><pre><code>x &lt;- c(1, 2, 3, 4, 5)
+y &lt;- c(10, 20, 15, 25, 30)
+
+plot(x, y, type = &quot;l&quot;,
+     main = &quot;Line Plot&quot;,
+     xlab = &quot;X&quot;, ylab = &quot;Y&quot;)</code></pre><h3 id="bar">長條圖</h3><pre><code>categories &lt;- c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;)
+values &lt;- c(23, 45, 12, 36)
+
+barplot(values, names.arg = categories)</code></pre><h3 id="hist">直方圖</h3><pre><code>set.seed(123)
+data &lt;- rnorm(1000)
+
+hist(data, breaks = 30)</code></pre><h3 id="scatter">散佈圖</h3><pre><code>set.seed(123)
+x &lt;- runif(50)
+y &lt;- runif(50)
+
+plot(x, y)</code></pre></section>
+<section><h2 id="ggplot">5. 使用 ggplot2</h2><pre><code>library(ggplot2)</code></pre><h3 id="gg-hist">直方圖</h3><pre><code>ggplot(df, aes(x = column_name)) +
+  geom_histogram(bins = 30) +
+  labs(title = &quot;Histogram&quot;)</code></pre><h3 id="gg-scatter">依類別分組的散佈圖</h3><pre><code>ggplot(df, aes(
+  x = col1,
+  y = col2,
+  color = category_column
+)) +
+  geom_point()</code></pre><div class="callout">ggplot2 的 <code>color</code> 可依類別欄位分組上色。</div></section>
+<section><h2 id="save">6. 儲存圖表</h2><pre><code>plot_object &lt;- ggplot(df, aes(x = col1, y = col2)) +
+  geom_point()
+
+ggsave(
+  &quot;scatter_plot.png&quot;,
+  plot = plot_object,
+  width = 8, height = 6
+)</code></pre></section>
+<section><h2 id="summary">本章重點整理</h2><ul><li>CSV 可使用 <code>read.csv()</code> 或 <code>read_csv()</code></li><li>Excel 可使用 <code>read_excel()</code></li><li>資料讀入後先檢查欄位與資料型態</li><li>Base R 與 ggplot2 都能建立統計圖表</li></ul></section>
+<section><h2 id="practice">練習題</h2><ol><li>讀取一份 CSV 並顯示前六筆。</li><li>使用 Base R 繪製直方圖。</li><li>使用 ggplot2 建立依類別分組的散佈圖。</li></ol></section><nav class="chapter-pagination"><a href="ch01.html"><span class="pagination-label">← 上一章</span><span class="pagination-title">第 1 章｜RStudio 與 Posit Cloud 基礎</span></a><a href="ch03.html"><span class="pagination-label">下一章 →</span><span class="pagination-title">第 3 章｜資料整理與前處理</span></a></nav><footer class="site-footer">© <span id="current-year"></span> R 統計學教室．Built for GitHub Pages.</footer></main><aside class="page-toc"><p class="toc-title">On This Page</p><ul id="page-toc-list"></ul></aside></div><div id="backdrop" class="backdrop"></div><script src="../assets/js/site.js"></script></body></html>
