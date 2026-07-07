@@ -1,44 +1,409 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="R 統計學教室第 1 章：RStudio 與 Posit Cloud 基礎"><title>第 1 章｜RStudio 與 Posit Cloud 基礎｜R 統計學教室</title><link rel="stylesheet" href="../assets/css/style.css"></head><body data-chapter="01"><header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark">R</span><span>R 統計學教室</span></a><div class="header-actions"><a class="header-link" href="../index.html">回首頁</a><button id="menu-button" class="menu-button" type="button">☰ 目錄</button></div></header><div class="site-layout"><aside class="sidebar"><p class="sidebar-title">Course Menu</p><ul id="chapter-nav" class="chapter-nav"></ul></aside><main class="content"><section class="hero"><p class="eyebrow">Chapter 01</p><h1>RStudio 與 Posit Cloud 基礎</h1><p class="lead">認識 R、RStudio、Posit Cloud 與基本語法</p></section>
-<section><h2 id="what-is-r">1. 什麼是 R？</h2><p>R 是專為統計分析、資料視覺化與資料科學設計的程式語言。</p><ul><li>免費且開源</li><li>內建大量統計函數</li><li>擁有完整的 CRAN 套件生態系</li><li>適合研究與商業資料分析</li></ul></section>
-<section><h2 id="rstudio">2. RStudio 與 Posit Cloud</h2><p>RStudio 是常用的 R 開發環境；Posit Cloud 則可直接在瀏覽器執行 R。</p><h3 id="interface">RStudio 介面</h3><ul><li><strong>Source：</strong>撰寫與保存程式碼</li><li><strong>Console：</strong>即時執行指令</li><li><strong>Environment：</strong>查看物件與資料</li><li><strong>Files / Plots / Packages / Help：</strong>管理檔案、圖表、套件與說明</li></ul><div class="callout">不想安裝軟體時，可以前往 <a href="https://posit.cloud" target="_blank" rel="noopener">Posit Cloud</a>。</div></section>
-<section><h2 id="syntax">3. R 基本語法</h2><h3 id="variables">變數與指定</h3><pre><code>name &lt;- &quot;Alice&quot;
-age &lt;- 20
-height &lt;- 165.5
-is_student &lt;- TRUE
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="R 統計學教室第 1 章：Getting Started with R">
+  <title>第 1 章｜Getting Started with R｜R 統計學教室</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-chapter="01">
+<header class="site-header">
+  <a class="brand" href="../index.html">
+    <span class="brand-mark">R</span>
+    <span>R 統計學教室</span>
+  </a>
+  <div class="header-actions">
+    <a class="header-link" href="../index.html">回首頁</a>
+    <button id="menu-button" class="menu-button" type="button" aria-label="開啟章節選單">☰ 目錄</button>
+  </div>
+</header>
 
-print(name)</code></pre><p>R 最常使用 <code>&lt;-</code> 指定變數。</p><h3 id="vector">向量</h3><pre><code>scores &lt;- c(85, 90, 78, 92)
+<div class="site-layout">
+<aside class="sidebar" aria-label="課程章節導覽">
+  <p class="sidebar-title">Course Menu</p>
+  <ul id="chapter-nav" class="chapter-nav"></ul>
+</aside>
 
-scores[1]        # R 的索引從 1 開始
+<main class="content">
+<section class="hero">
+  <p class="eyebrow">Chapter 01</p>
+  <h1>Getting Started with R</h1>
+  <p class="lead">安裝與 R 語言入門、工作目錄、基本操作、資料型態、型態轉換與實用小功能。</p>
+</section>
+
+<section>
+  <h2 id="course-info">課程資訊</h2>
+  <div class="card-grid">
+    <article class="card">
+      <h3>R Guideline</h3>
+      <p>本章適合第一次接觸 R，或希望重新複習基礎語法的學習者。</p>
+    </article>
+    <article class="card">
+      <h3>Teaching Assistant</h3>
+      <p>TA：Pinky<br>Email：<a href="mailto:pineapple168.mg11@nycu.edu.tw">pineapple168.mg11@nycu.edu.tw</a></p>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2 id="getting-started">1. Getting Started with R</h2>
+  <p>R 是一款專為統計分析、資料處理與資料視覺化設計的免費軟體環境，同時也是一門程式語言。它融合統計套件的便利性與程式設計的彈性，廣泛應用於資料分析、機器學習、商業分析與科學研究。</p>
+  <p>R 不只能執行平均數、迴歸分析與假設檢定，也能整理資料、建立自動化分析流程，並輸出高品質圖表。</p>
+
+  <h3 id="r-features">R 語言的主要特色</h3>
+  <ul>
+    <li><strong>容易取得：</strong>R 可以免費下載與使用。</li>
+    <li><strong>自由性高：</strong>使用者可以自行撰寫函式與套件。</li>
+    <li><strong>功能完整：</strong>涵蓋統計分析、資料整理、機器學習與視覺化。</li>
+    <li><strong>套件豐富：</strong>可從 CRAN 安裝套件，依需求擴充功能。</li>
+    <li><strong>文件完整：</strong>可透過 Help 查詢函式、參數及使用範例。</li>
+    <li><strong>高階語言：</strong>可以較少程式碼完成複雜分析。</li>
+    <li><strong>繪圖能力強：</strong>可使用內建繪圖或 ggplot2 製作高品質圖表。</li>
+  </ul>
+</section>
+
+<section>
+  <h2 id="installation">1.1 安裝與 R 語言入門</h2>
+
+  <h3 id="install-r">安裝 R</h3>
+  <ol>
+    <li>前往 <a href="https://cran.r-project.org/" target="_blank" rel="noopener noreferrer">CRAN 官方網站</a>。</li>
+    <li>依作業系統選擇 Windows、macOS 或 Linux。</li>
+    <li>下載並安裝最新版本的 R。</li>
+  </ol>
+
+  <h3 id="install-rstudio">安裝 RStudio</h3>
+  <p>RStudio 是常用的 R 整合開發環境，可集中管理程式碼、Console、變數、圖表、套件與說明文件。</p>
+  <ol>
+    <li>先完成 R 的安裝。</li>
+    <li>前往 <a href="https://posit.co/download/rstudio-desktop/" target="_blank" rel="noopener noreferrer">RStudio Desktop</a> 下載。</li>
+    <li>安裝後開啟 RStudio，確認 Console 可以正常執行指令。</li>
+  </ol>
+
+  <h3 id="first-command">第一個 R 指令</h3>
+  <pre><code># 在 Console 輸入
+1 + 1
+
+# 執行結果
+# [1] 2</code></pre>
+  <p>輸出前的 <code>[1]</code> 代表該行第一個顯示的元素，在完整結果中位於第 1 個位置。</p>
+
+  <div class="callout">
+    <strong>教學檔案：</strong>目前尚未提供實際 PDF。上傳 PDF 後，再把這裡改成正式下載連結即可。
+  </div>
+</section>
+
+<section>
+  <h2 id="working-directory">1.2 設定工作目錄（Working Directory）</h2>
+  <p>工作目錄是 R 預設讀取與儲存檔案的位置。使用相對路徑時，R 會從目前工作目錄尋找檔案。</p>
+
+  <h3 id="getwd">查看目前工作目錄</h3>
+  <pre><code>getwd()
+
+# 範例輸出
+# [1] "D:/college information/R_statistics"</code></pre>
+
+  <h3 id="setwd">設定工作目錄</h3>
+  <pre><code>setwd("D:/college information/R_statistics")
+getwd()
+
+# 範例輸出
+# [1] "D:/college information/R_statistics"</code></pre>
+
+  <div class="callout">
+    <strong>Windows 路徑提醒：</strong>建議使用正斜線 <code>/</code>，不要直接使用單一反斜線。
+  </div>
+
+  <h3 id="relative-path">使用相對路徑</h3>
+  <pre><code># data 資料夾位於目前專案中
+file_path &lt;- "data/student_scores.csv"</code></pre>
+  <p>相對路徑較容易分享，也能降低換電腦後路徑失效的機率。實務上建議使用 RStudio Project 管理每一份作業或研究。</p>
+</section>
+
+<section>
+  <h2 id="basic-operations">1.3 基本操作</h2>
+
+  <h3 id="arithmetic">基本運算</h3>
+  <pre><code>3 + 5      # 加法
+10 - 4     # 減法
+6 * 7      # 乘法
+20 / 4     # 除法
+2 ^ 3      # 次方
+10 %% 3    # 餘數
+10 %/% 3   # 整數除法</code></pre>
+
+  <h3 id="assignment">指定變數</h3>
+  <pre><code>x &lt;- 10
+y &lt;- 20
+
+x + y
+# [1] 30</code></pre>
+  <p>R 可使用 <code>&lt;-</code> 或 <code>=</code> 指定變數，但一般 R 程式較常使用 <code>&lt;-</code>。</p>
+
+  <h3 id="vectors">建立向量</h3>
+  <pre><code># 定義向量 x 為 2 到 9
+x &lt;- 2:9
+
+x
+# [1] 2 3 4 5 6 7 8 9
+
+# 另一種建立向量的方法
+z &lt;- c(1, 2, 3, 4)</code></pre>
+
+  <h3 id="vectorized">向量化運算</h3>
+  <pre><code>x &lt;- 2:9
+
+x + 1
+# [1] 3 4 5 6 7 8 9 10
+
+x * 5
+# [1] 10 15 20 25 30 35 40 45
+
+y &lt;- 2 * x</code></pre>
+  <p>R 的運算可以直接作用在向量中的每個元素，通常不需要逐筆撰寫迴圈。</p>
+
+  <h3 id="coercion">向量型態一致性</h3>
+  <pre><code>x &lt;- c(3, "abc", 4)
+
+x
+# [1] "3"   "abc" "4"</code></pre>
+  <p>原子向量只能保存同一種基本型態。數值與文字混合時，R 會把數值轉成文字。</p>
+
+  <h3 id="indexing">向量索引</h3>
+  <pre><code>x &lt;- c(3, 5, 9)
+
+x[2]
+# [1] 5
+
+x[c(1, 3)]
+# [1] 3 9
+
+x[1:2]
+# [1] 3 5</code></pre>
+
+  <div class="callout"><strong>重要：</strong>R 的索引從 <code>1</code> 開始，和 Python 從 <code>0</code> 開始不同。</div>
+
+  <h3 id="logical-index">邏輯索引</h3>
+  <pre><code>scores &lt;- c(65, 80, 92, 70, 88)
+
+scores[scores &gt;= 80]
+# [1] 80 92 88</code></pre>
+
+  <h3 id="vector-functions">常用向量函式</h3>
+  <pre><code>scores &lt;- c(65, 80, 92, 70, 88)
+
+length(scores)
+sum(scores)
 mean(scores)
-length(scores)</code></pre><div class="callout"><strong>注意：</strong>R 的索引從 1 開始，和 Python 從 0 開始不同。</div><h3 id="condition">條件判斷</h3><pre><code>score &lt;- 92
+min(scores)
+max(scores)
+sort(scores)</code></pre>
+</section>
 
-if (score &gt;= 90) {
-  print(&quot;優異&quot;)
-} else {
-  print(&quot;普通&quot;)
-}</code></pre><h3 id="loop">迴圈</h3><pre><code>for (score in scores) {
-  print(score)
-}</code></pre><h3 id="function">函式</h3><pre><code>add &lt;- function(a, b) {
-  return(a + b)
-}
+<section>
+  <h2 id="data-types">1.4 資料型態</h2>
+  <p>可以使用 <code>class()</code>、<code>typeof()</code> 或 <code>str()</code> 查詢資料型態；<code>View()</code> 則適合表格資料。</p>
 
-add(3, 5)</code></pre></section>
-<section><h2 id="structures">4. 常見資料結構</h2><h3 id="list">List</h3><pre><code>student &lt;- list(
-  name = &quot;Alice&quot;,
-  age = 20,
-  score = 90
-)
+  <h3 id="character">1.4.1 Character：文字字串</h3>
+  <pre><code>x &lt;- "Hello world."
 
-student$name</code></pre><h3 id="dataframe">Data Frame</h3><pre><code>students &lt;- data.frame(
-  name = c(&quot;Alice&quot;, &quot;Bob&quot;, &quot;Carol&quot;),
-  score = c(90, 82, 95)
-)
+x
+# [1] "Hello world."
 
-students</code></pre></section>
-<section><h2 id="packages">5. 安裝與載入套件</h2><pre><code># 第一次使用時安裝
-install.packages(&quot;tidyverse&quot;)
+class(x)
+# [1] "character"</code></pre>
 
-# 每次開啟 R 後載入
-library(tidyverse)</code></pre><div class="callout">套件通常只需安裝一次，但每次重新開啟 R 都要使用 <code>library()</code> 載入。</div></section>
-<section><h2 id="summary">本章重點整理</h2><ul><li>R 適合統計分析與視覺化</li><li>RStudio 與 Posit Cloud 都能執行 R</li><li>R 常用 <code>&lt;-</code> 指定變數，索引從 1 開始</li><li>常見結構包含向量、List 與 Data Frame</li></ul></section>
-<section><h2 id="practice">練習題</h2><ol><li>建立五個成績的向量並計算平均數。</li><li>建立包含姓名、年齡與成績的資料框。</li><li>撰寫一個回傳兩數較大值的函式。</li></ol></section><nav class="chapter-pagination"><a href="../index.html"><span class="pagination-label">← 返回</span><span class="pagination-title">課程首頁</span></a><a href="ch02.html"><span class="pagination-label">下一章 →</span><span class="pagination-title">第 2 章｜資料讀取與繪圖</span></a></nav><footer class="site-footer">© <span id="current-year"></span> R 統計學教室．Built for GitHub Pages.</footer></main><aside class="page-toc"><p class="toc-title">On This Page</p><ul id="page-toc-list"></ul></aside></div><div id="backdrop" class="backdrop"></div><script src="../assets/js/site.js"></script></body></html>
+  <h3 id="numeric">1.4.2 Numeric：數值型態</h3>
+  <pre><code>x &lt;- 100
+
+class(x)
+# [1] "numeric"
+
+x + 5
+x - 5
+x * 5
+x / 3
+x %% 3
+
+v &lt;- c(10, 11, 12, 11)
+sum(v)
+# [1] 44</code></pre>
+
+  <h3 id="integer">1.4.3 Integer：整數型態</h3>
+  <pre><code>x &lt;- 3L
+class(x)
+# [1] "integer"
+
+y &lt;- as.integer(3.5)
+y
+# [1] 3</code></pre>
+  <div class="callout"><strong>注意：</strong><code>as.integer()</code> 會捨去小數，不是四捨五入；四捨五入請用 <code>round()</code>。</div>
+
+  <h3 id="complex">1.4.4 Complex：複數型態</h3>
+  <pre><code>z &lt;- 3 + 2i
+
+z
+# [1] 3+2i
+
+class(z)
+# [1] "complex"
+
+Re(z)   # 實部
+Im(z)   # 虛部
+Mod(z)  # 模長</code></pre>
+
+  <h3 id="logical">1.4.5 Logical：邏輯值</h3>
+  <pre><code>x &lt;- TRUE
+y &lt;- FALSE
+
+class(x)
+# [1] "logical"
+
+score &lt;- 85
+score &gt;= 60
+# [1] TRUE</code></pre>
+  <p>雖然可以使用 <code>T</code> 與 <code>F</code>，但建議寫完整的 <code>TRUE</code>、<code>FALSE</code>，避免被同名變數覆蓋。</p>
+
+  <h3 id="missing">缺失值 NA</h3>
+  <pre><code>scores &lt;- c(80, 90, NA, 75)
+
+mean(scores)
+# [1] NA
+
+mean(scores, na.rm = TRUE)
+# [1] 81.66667</code></pre>
+</section>
+
+<section>
+  <h2 id="type-conversion">1.5 資料型態的轉換</h2>
+  <p>可使用 <code>as.資料型態()</code> 將物件轉成不同型態。轉換前應確認內容是否合理，否則可能產生 <code>NA</code>。</p>
+
+  <h3 id="convert-character">轉成 Character</h3>
+  <pre><code>x &lt;- 3
+x &lt;- as.character(x)
+
+class(x)
+# [1] "character"</code></pre>
+
+  <h3 id="convert-numeric">轉成 Numeric</h3>
+  <pre><code>x &lt;- "3.14"
+x &lt;- as.numeric(x)
+
+class(x)
+# [1] "numeric"</code></pre>
+
+  <h3 id="invalid-conversion">無法轉換的內容</h3>
+  <pre><code>x &lt;- "apple"
+as.numeric(x)
+
+# [1] NA
+# Warning message:
+# NAs introduced by coercion</code></pre>
+
+  <h3 id="convert-factor">轉成 Factor</h3>
+  <pre><code>group &lt;- c("A", "B", "A", "C")
+group &lt;- as.factor(group)
+
+class(group)
+# [1] "factor"
+
+levels(group)
+# [1] "A" "B" "C"</code></pre>
+
+  <ul>
+    <li><code>as.character()</code>：轉成文字。</li>
+    <li><code>as.numeric()</code>：轉成數值。</li>
+    <li><code>as.integer()</code>：轉成整數。</li>
+    <li><code>as.logical()</code>：轉成邏輯值。</li>
+    <li><code>as.factor()</code>：轉成類別資料。</li>
+    <li><code>as.Date()</code>：轉成日期。</li>
+  </ul>
+</section>
+
+<section>
+  <h2 id="other-tools">1.6 其他小功能</h2>
+
+  <h3 id="comments">註解</h3>
+  <pre><code># 井字號後面的內容不會執行
+x &lt;- 10
+
+x + 5   # 也可以寫在指令後方</code></pre>
+
+  <h3 id="help">查詢說明文件</h3>
+  <pre><code>?mean
+help(mean)
+
+??ggplot
+
+args(mean)
+example(mean)</code></pre>
+
+  <h3 id="environment">查看與移除物件</h3>
+  <pre><code>ls()            # 查看目前物件
+rm(x)           # 刪除單一物件
+rm(list = ls()) # 刪除全部物件</code></pre>
+
+  <div class="callout"><strong>小心：</strong><code>rm(list = ls())</code> 會清空目前環境，執行前先確認重要結果已儲存。</div>
+
+  <h3 id="guidelines">R 使用建議</h3>
+  <ul>
+    <li><strong>避免中文路徑與檔名：</strong>優先使用英文，以降低編碼相容性問題。</li>
+    <li><strong>先檢查資料型態：</strong>讀入資料後先使用 <code>class()</code>、<code>str()</code> 或 <code>summary()</code>。</li>
+    <li><strong>注意大小寫：</strong><code>score</code> 與 <code>Score</code> 是不同物件。</li>
+    <li><strong>命名要有意義：</strong><code>student_score</code> 通常比 <code>x1</code> 更容易理解。</li>
+    <li><strong>Warning 不是 Error：</strong>Warning 代表程式可能已執行，但結果可能有潛在問題；仍應閱讀訊息，而不是全部忽略。</li>
+  </ul>
+</section>
+
+<section>
+  <h2 id="summary">本章重點整理</h2>
+  <ul>
+    <li>R 是免費且適合統計分析、資料處理與視覺化的程式語言。</li>
+    <li><code>getwd()</code> 與 <code>setwd()</code> 可查看及設定工作目錄。</li>
+    <li>R 支援向量化運算，且索引從 1 開始。</li>
+    <li>常見型態包含 character、numeric、integer、complex 與 logical。</li>
+    <li>可使用 <code>as.*()</code> 系列函式轉換資料型態。</li>
+    <li>轉換失敗可能產生 <code>NA</code> 與 warning。</li>
+  </ul>
+</section>
+
+<section>
+  <h2 id="practice">練習題</h2>
+  <ol>
+    <li>使用 <code>getwd()</code> 查看工作目錄，並說明它和檔案讀取的關係。</li>
+    <li>建立 <code>x &lt;- 1:10</code>，計算每個元素的平方。</li>
+    <li>從 <code>c(65, 80, 92, 70, 88)</code> 取出大於等於 80 的數值。</li>
+    <li>建立 character、numeric、integer、complex 與 logical 物件，並用 <code>class()</code> 檢查。</li>
+    <li>將字串 <code>"100"</code> 轉成 numeric，再加上 20。</li>
+    <li>將 <code>"apple"</code> 轉成 numeric，並解釋 warning。</li>
+    <li>使用 <code>?mean</code> 查詢 <code>na.rm</code> 參數。</li>
+  </ol>
+</section>
+
+<nav class="chapter-pagination" aria-label="章節切換">
+  <a href="../index.html">
+    <span class="pagination-label">← 返回</span>
+    <span class="pagination-title">課程首頁</span>
+  </a>
+  <a href="ch02.html">
+    <span class="pagination-label">下一章 →</span>
+    <span class="pagination-title">第 2 章｜資料讀取與繪圖</span>
+  </a>
+</nav>
+
+<footer class="site-footer">
+  © <span id="current-year"></span> R 統計學教室．Built for GitHub Pages.
+</footer>
+</main>
+
+<aside class="page-toc" aria-label="本頁目錄">
+  <p class="toc-title">On This Page</p>
+  <ul id="page-toc-list"></ul>
+</aside>
+</div>
+
+<div id="backdrop" class="backdrop"></div>
+<script src="../assets/js/site.js"></script>
+</body>
+</html>
