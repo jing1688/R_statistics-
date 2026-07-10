@@ -1,104 +1,374 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="R 統計學教室第 2 章：資料讀取與繪圖"><title>第 2 章｜資料讀取與繪圖｜R 統計學教室</title><link rel="stylesheet" href="../assets/css/style.css"></head><body data-chapter="02"><header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark">R</span><span>R 統計學教室</span></a><div class="header-actions"><a class="header-link" href="../index.html">回首頁</a><button id="menu-button" class="menu-button" type="button">☰ 目錄</button></div></header><div class="site-layout"><aside class="sidebar"><p class="sidebar-title">Course Menu</p><ul id="chapter-nav" class="chapter-nav"></ul></aside><main class="content"><section class="hero"><p class="eyebrow">Chapter 02</p><h1>資料讀取與繪圖</h1><p class="lead">使用 readr、readxl、Base R 與 ggplot2 讀取及呈現資料</p></section>
-<section><h2 id="read-csv">1. 讀取 CSV</h2><h3 id="base-csv">Base R</h3><pre><code>df &lt;- read.csv(
-  &quot;data.csv&quot;,
-  fileEncoding = &quot;UTF-8&quot;
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta
+    name="description"
+    content="R 統計學教室第 2 章：資料讀取、描述統計與繪圖"
+  >
+  <title>第 2 章｜資料讀取與繪圖｜R 統計學教室</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body data-chapter="02">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">
+    <span class="brand-mark">R</span>
+    <span>R 統計學教室</span>
+  </a>
+
+  <div class="header-actions">
+    <a class="header-link" href="../index.html">回首頁</a>
+    <button
+      id="menu-button"
+      class="menu-button"
+      type="button"
+      aria-label="開啟章節選單"
+    >
+      ☰ 目錄
+    </button>
+  </div>
+</header>
+
+<div class="site-layout">
+
+  <aside class="sidebar">
+    <p class="sidebar-title">Course Menu</p>
+    <ul id="chapter-nav" class="chapter-nav"></ul>
+  </aside>
+
+  <main class="content">
+
+    <section class="hero">
+      <p class="eyebrow">Chapter 02</p>
+      <h1>資料讀取與繪圖</h1>
+      <p class="lead">
+        使用 readr、readxl、Base R 與 ggplot2 讀取、整理及呈現資料
+      </p>
+    </section>
+
+    <section>
+      <h2 id="read-csv">1. 讀取 CSV</h2>
+
+      <h3 id="base-csv">Base R</h3>
+
+      <pre><code>df &lt;- read.csv(
+  "data.csv",
+  fileEncoding = "UTF-8"
 )
 
-head(df)</code></pre><h3 id="readr-csv">readr</h3><pre><code>library(readr)
+head(df)</code></pre>
 
-df &lt;- read_csv(&quot;data.csv&quot;)
-head(df)</code></pre><div class="callout">中文亂碼時，可依檔案編碼嘗試 UTF-8、UTF-8-BOM 或 Big5。</div></section>
-<section><h2 id="read-excel">2. 讀取 Excel</h2><pre><code>install.packages(&quot;readxl&quot;)
+      <h3 id="readr-csv">readr</h3>
+
+      <pre><code>library(readr)
+
+df &lt;- read_csv("data.csv")
+
+head(df)</code></pre>
+
+      <div class="callout">
+        中文亂碼時，可依檔案編碼嘗試 UTF-8、UTF-8-BOM 或 Big5。
+      </div>
+    </section>
+
+    <section>
+      <h2 id="read-excel">2. 讀取 Excel</h2>
+
+      <pre><code>install.packages("readxl")
 library(readxl)
 
 df &lt;- read_excel(
-  &quot;data.xlsx&quot;,
-  sheet = &quot;Sheet1&quot;
+  "data.xlsx",
+  sheet = "Sheet1"
 )
 
-head(df)</code></pre><p><code>sheet</code> 可以填工作表名稱，也可用數字指定位置。</p></section>
-<section><h2 id="inspect">3. 初步檢查資料</h2><pre><code>head(df)       # 前六筆
+head(df)</code></pre>
+
+      <p>
+        <code>sheet</code> 可以填入工作表名稱，也可使用數字指定工作表位置。
+      </p>
+    </section>
+
+    <section>
+      <h2 id="inspect">3. 初步檢查資料</h2>
+
+      <pre><code>head(df)       # 前六筆
 tail(df)       # 後六筆
 dim(df)        # 列數與欄數
 names(df)      # 欄位名稱
 str(df)        # 資料結構
-summary(df)    # 摘要統計</code></pre><div class="callout">剛讀入資料時，至少先執行 <code>head()</code>、<code>str()</code> 與 <code>summary()</code>。</div></section>
+summary(df)    # 摘要統計</code></pre>
 
-<section>
-<h2 id="descriptive">4. 描述統計</h2>
+      <div class="callout">
+        剛讀入資料時，至少先執行
+        <code>head()</code>、<code>str()</code> 與
+        <code>summary()</code>。
+      </div>
+    </section>
 
-<h3>平均數（Mean）</h3>
+    <section>
+      <h2 id="descriptive">4. 描述統計</h2>
 
-<pre><code>mean(df$score)</code></pre>
+      <h3 id="mean">平均數（Mean）</h3>
 
-<p>計算資料的平均值。</p>
+      <pre><code>mean(df$score, na.rm = TRUE)</code></pre>
 
-<h3>中位數（Median）</h3>
+      <p>
+        平均數為所有觀察值加總後，再除以觀察值的數量。
+      </p>
 
-<pre><code>median(df$score)</code></pre>
+      <h3 id="median">中位數（Median）</h3>
 
-<p>取得資料排序後位於中間的數值，不容易受到極端值影響。</p>
+      <pre><code>median(df$score, na.rm = TRUE)</code></pre>
 
-<h3>眾數（Mode）</h3>
+      <p>
+        中位數是資料排序後位於中間的數值，較不容易受到極端值影響。
+      </p>
 
-<p>R 沒有內建眾數函數，可自行建立：</p>
+      <h3 id="mode">眾數（Mode）</h3>
 
-<pre><code>mode_value &lt;- function(x){
-  ux &lt;- unique(x)
-  ux[which.max(tabulate(match(x, ux)))]
+      <p>
+        R 沒有直接計算統計眾數的內建函數，因此可以自行建立函數：
+      </p>
+
+      <pre><code>mode_value &lt;- function(x) {
+  x &lt;- x[!is.na(x)]
+  unique_values &lt;- unique(x)
+
+  unique_values[
+    which.max(tabulate(match(x, unique_values)))
+  ]
 }
 
 mode_value(df$score)</code></pre>
 
-<div class="callout">
-平均數適合一般資料；若資料存在極端值，可搭配中位數一起觀察；眾數適合分析最常出現的類別或數值。
-</div>
+      <div class="callout">
+        平均數適合描述整體平均水準；資料存在極端值時，可搭配中位數一起觀察；
+        眾數則可找出資料中最常出現的數值或類別。
+      </div>
+    </section>
 
-</section>  
-<section><h2 id="base-plot">5. 使用 Base R 繪圖</h2><h3 id="line">折線圖</h3><pre><code>x &lt;- c(1, 2, 3, 4, 5)
+    <section>
+      <h2 id="base-plot">5. 使用 Base R 繪圖</h2>
+
+      <h3 id="line">折線圖</h3>
+
+      <pre><code>x &lt;- c(1, 2, 3, 4, 5)
 y &lt;- c(10, 20, 15, 25, 30)
 
-plot(x, y, type = &quot;l&quot;,
-     main = &quot;Line Plot&quot;,
-     xlab = &quot;X&quot;, ylab = &quot;Y&quot;)</code></pre><h3 id="bar">長條圖</h3><pre><code>categories &lt;- c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;)
+plot(
+  x,
+  y,
+  type = "l",
+  main = "Line Plot",
+  xlab = "X",
+  ylab = "Y"
+)</code></pre>
+
+      <h3 id="bar">長條圖</h3>
+
+      <pre><code>categories &lt;- c("A", "B", "C", "D")
 values &lt;- c(23, 45, 12, 36)
 
-barplot(values, names.arg = categories)</code></pre><h3 id="hist">直方圖</h3><pre><code>set.seed(123)
-data &lt;- rnorm(1000)
+barplot(
+  values,
+  names.arg = categories,
+  main = "Bar Plot",
+  xlab = "Category",
+  ylab = "Value"
+)</code></pre>
 
-hist(data, breaks = 30)</code></pre><h3 id="scatter">散佈圖</h3><pre><code>set.seed(123)
+      <h3 id="hist">直方圖</h3>
+
+      <pre><code>set.seed(123)
+
+values &lt;- rnorm(1000)
+
+hist(
+  values,
+  breaks = 30,
+  main = "Histogram",
+  xlab = "Value"
+)</code></pre>
+
+      <h3 id="scatter">散佈圖</h3>
+
+      <pre><code>set.seed(123)
+
 x &lt;- runif(50)
 y &lt;- runif(50)
 
-plot(x, y)</code></pre></section>
-<section><h2 id="ggplot">5. 使用 ggplot2</h2><pre><code>library(ggplot2)</code></pre><h3 id="gg-hist">直方圖</h3><pre><code>ggplot(df, aes(x = column_name)) +
-  geom_histogram(bins = 30) +
-  labs(title = &quot;Histogram&quot;)</code></pre><h3 id="gg-scatter">依類別分組的散佈圖</h3><pre><code>ggplot(df, aes(
-  x = col1,
-  y = col2,
-  color = category_column
-)) +
-  geom_point()</code></pre><div class="callout">ggplot2 的 <code>color</code> 可依類別欄位分組上色。</div></section>
-<h3 id="boxplot">盒鬚圖（Boxplot）</h3>
+plot(
+  x,
+  y,
+  main = "Scatter Plot",
+  xlab = "X",
+  ylab = "Y"
+)</code></pre>
 
-<pre><code>set.seed(123)
-data &lt;- rnorm(100)
+      <h3 id="boxplot">盒鬚圖（Boxplot）</h3>
+
+      <pre><code>set.seed(123)
+
+values &lt;- rnorm(100)
 
 boxplot(
-  data,
+  values,
   main = "Boxplot",
   ylab = "Value",
   col = "lightblue"
 )</code></pre>
 
-<p>盒鬚圖可快速觀察資料的中位數、四分位數、離群值與資料分散程度。</p>
-<section><h2 id="save">6. 儲存圖表</h2><pre><code>plot_object &lt;- ggplot(df, aes(x = col1, y = col2)) +
+      <p>
+        盒鬚圖可快速觀察資料的中位數、四分位數、資料分散程度與可能的離群值。
+      </p>
+    </section>
+
+    <section>
+      <h2 id="ggplot">6. 使用 ggplot2</h2>
+
+      <pre><code>library(ggplot2)</code></pre>
+
+      <h3 id="gg-hist">直方圖</h3>
+
+      <pre><code>ggplot(df, aes(x = column_name)) +
+  geom_histogram(bins = 30) +
+  labs(
+    title = "Histogram",
+    x = "Value",
+    y = "Frequency"
+  )</code></pre>
+
+      <h3 id="gg-scatter">依類別分組的散佈圖</h3>
+
+      <pre><code>ggplot(
+  df,
+  aes(
+    x = col1,
+    y = col2,
+    color = category_column
+  )
+) +
+  geom_point()</code></pre>
+
+      <h3 id="gg-boxplot">盒鬚圖</h3>
+
+      <pre><code>ggplot(
+  df,
+  aes(
+    x = category_column,
+    y = value_column
+  )
+) +
+  geom_boxplot() +
+  labs(
+    title = "Boxplot",
+    x = "Category",
+    y = "Value"
+  )</code></pre>
+
+      <div class="callout">
+        ggplot2 的 <code>color</code> 可依類別欄位分組上色；
+        盒鬚圖則適合比較不同類別的資料分布。
+      </div>
+    </section>
+
+    <section>
+      <h2 id="save">7. 儲存圖表</h2>
+
+      <pre><code>plot_object &lt;- ggplot(
+  df,
+  aes(
+    x = col1,
+    y = col2
+  )
+) +
   geom_point()
 
 ggsave(
-  &quot;scatter_plot.png&quot;,
+  "scatter_plot.png",
   plot = plot_object,
-  width = 8, height = 6
-)</code></pre></section>
-<section><h2 id="summary">本章重點整理</h2><ul><li>CSV 可使用 <code>read.csv()</code> 或 <code>read_csv()</code></li><li>Excel 可使用 <code>read_excel()</code></li><li>資料讀入後先檢查欄位與資料型態</li><li>Base R 與 ggplot2 都能建立統計圖表</li></ul></section>
-<section><h2 id="practice">練習題</h2><ol><li>讀取一份 CSV 並顯示前六筆。</li><li>使用 Base R 繪製直方圖。</li><li>使用 ggplot2 建立依類別分組的散佈圖。</li></ol></section><nav class="chapter-pagination"><a href="ch01.html"><span class="pagination-label">← 上一章</span><span class="pagination-title">第 1 章｜RStudio 與 Posit Cloud 基礎</span></a><a href="ch03.html"><span class="pagination-label">下一章 →</span><span class="pagination-title">第 3 章｜資料整理與前處理</span></a></nav><footer class="site-footer">© <span id="current-year"></span> R 統計學教室．Built for GitHub Pages.</footer></main><aside class="page-toc"><p class="toc-title">On This Page</p><ul id="page-toc-list"></ul></aside></div><div id="backdrop" class="backdrop"></div><script src="../assets/js/site.js"></script></body></html>
+  width = 8,
+  height = 6
+)</code></pre>
+    </section>
+
+    <section>
+      <h2 id="summary">本章重點整理</h2>
+
+      <ul>
+        <li>
+          CSV 可使用 <code>read.csv()</code> 或
+          <code>read_csv()</code> 讀取。
+        </li>
+        <li>
+          Excel 可使用 <code>read_excel()</code> 讀取。
+        </li>
+        <li>
+          資料讀入後應先利用
+          <code>head()</code>、<code>str()</code> 與
+          <code>summary()</code> 檢查資料。
+        </li>
+        <li>
+          可利用平均數、中位數與眾數描述資料的集中趨勢。
+        </li>
+        <li>
+          Base R 可以繪製折線圖、長條圖、直方圖、散佈圖與盒鬚圖。
+        </li>
+        <li>
+          ggplot2 可建立容易調整與擴充的統計圖表。
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 id="practice">練習題</h2>
+
+      <ol>
+        <li>讀取一份 CSV，並顯示前六筆資料。</li>
+        <li>計算一個數值欄位的平均數、中位數與眾數。</li>
+        <li>使用 Base R 繪製直方圖與盒鬚圖。</li>
+        <li>使用 ggplot2 建立依類別分組的散佈圖。</li>
+        <li>使用 ggplot2 比較不同類別的盒鬚圖。</li>
+      </ol>
+    </section>
+
+    <nav class="chapter-pagination">
+      <a href="ch01.html">
+        <span class="pagination-label">← 上一章</span>
+        <span class="pagination-title">
+          第 1 章｜RStudio 與 Posit Cloud 基礎
+        </span>
+      </a>
+
+      <a href="ch03.html">
+        <span class="pagination-label">下一章 →</span>
+        <span class="pagination-title">
+          第 3 章｜資料整理與前處理
+        </span>
+      </a>
+    </nav>
+
+    <footer class="site-footer">
+      © <span id="current-year"></span>
+      R 統計學教室．Built for GitHub Pages.
+    </footer>
+
+  </main>
+
+  <aside class="page-toc">
+    <p class="toc-title">On This Page</p>
+    <ul id="page-toc-list"></ul>
+  </aside>
+
+</div>
+
+<div id="backdrop" class="backdrop"></div>
+
+<script src="../assets/js/site.js"></script>
+
+</body>
+</html>
