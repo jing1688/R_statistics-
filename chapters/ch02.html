@@ -23,7 +23,39 @@ dim(df)        # 列數與欄數
 names(df)      # 欄位名稱
 str(df)        # 資料結構
 summary(df)    # 摘要統計</code></pre><div class="callout">剛讀入資料時，至少先執行 <code>head()</code>、<code>str()</code> 與 <code>summary()</code>。</div></section>
-<section><h2 id="base-plot">4. 使用 Base R 繪圖</h2><h3 id="line">折線圖</h3><pre><code>x &lt;- c(1, 2, 3, 4, 5)
+
+<section>
+<h2 id="descriptive">4. 描述統計</h2>
+
+<h3>平均數（Mean）</h3>
+
+<pre><code>mean(df$score)</code></pre>
+
+<p>計算資料的平均值。</p>
+
+<h3>中位數（Median）</h3>
+
+<pre><code>median(df$score)</code></pre>
+
+<p>取得資料排序後位於中間的數值，不容易受到極端值影響。</p>
+
+<h3>眾數（Mode）</h3>
+
+<p>R 沒有內建眾數函數，可自行建立：</p>
+
+<pre><code>mode_value &lt;- function(x){
+  ux &lt;- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+
+mode_value(df$score)</code></pre>
+
+<div class="callout">
+平均數適合一般資料；若資料存在極端值，可搭配中位數一起觀察；眾數適合分析最常出現的類別或數值。
+</div>
+
+</section>  
+<section><h2 id="base-plot">5. 使用 Base R 繪圖</h2><h3 id="line">折線圖</h3><pre><code>x &lt;- c(1, 2, 3, 4, 5)
 y &lt;- c(10, 20, 15, 25, 30)
 
 plot(x, y, type = &quot;l&quot;,
@@ -47,6 +79,19 @@ plot(x, y)</code></pre></section>
   color = category_column
 )) +
   geom_point()</code></pre><div class="callout">ggplot2 的 <code>color</code> 可依類別欄位分組上色。</div></section>
+<h3 id="boxplot">盒鬚圖（Boxplot）</h3>
+
+<pre><code>set.seed(123)
+data &lt;- rnorm(100)
+
+boxplot(
+  data,
+  main = "Boxplot",
+  ylab = "Value",
+  col = "lightblue"
+)</code></pre>
+
+<p>盒鬚圖可快速觀察資料的中位數、四分位數、離群值與資料分散程度。</p>
 <section><h2 id="save">6. 儲存圖表</h2><pre><code>plot_object &lt;- ggplot(df, aes(x = col1, y = col2)) +
   geom_point()
 
