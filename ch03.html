@@ -1,3 +1,763 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="R 統計學教室第 3 章：資料整理與前處理"><title>第 3 章｜資料整理與前處理｜R 統計學教室</title><link rel="stylesheet" href="../assets/css/style.css"></head><body data-chapter="03"><header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark">R</span><span>R 統計學教室</span></a><div class="header-actions"><a class="header-link" href="../index.html">回首頁</a><button id="menu-button" class="menu-button" type="button">☰ 目錄</button></div></header><div class="site-layout"><aside class="sidebar"><p class="sidebar-title">Course Menu</p><ul id="chapter-nav" class="chapter-nav"></ul></aside><main class="content"><section class="hero"><p class="eyebrow">Chapter 03</p><h1>資料整理與前處理</h1><p class="lead">使用 dplyr、tidyr 清理、轉換與重塑資料</p></section><section><h2 id="goals">本章學習目標</h2><ul><li>理解本章核心概念。</li><li>能使用 R 完成基本分析。</li><li>能解讀輸出結果。</li></ul></section><section><h2 id="concepts">核心觀念</h2><div class="placeholder"><strong>內容待補：</strong>這裡可以放定義、公式、直覺解釋與常見誤區。</div></section><section><h2 id="r-demo">R 實作</h2><pre><code># TODO: 在此加入本章 R 範例
-data &lt;- c(10, 20, 30, 40, 50)
-mean(data)</code></pre></section><section><h2 id="example">範例解析</h2><div class="placeholder"><strong>範例待補：</strong>可以加入資料集、計算步驟、圖表與結果解讀。</div></section><section><h2 id="practice">練習題</h2><ol><li>概念題：解釋本章重要概念。</li><li>計算題：使用 R 完成分析。</li><li>應用題：根據結果提出結論。</li></ol></section><section><h2 id="summary">本章重點整理</h2><div class="callout">本區可整理三至五個重點。</div></section><nav class="chapter-pagination"><a href="ch02.html"><span class="pagination-label">← 上一章</span><span class="pagination-title">第 2 章｜資料讀取與繪圖</span></a><a href="ch04.html"><span class="pagination-label">下一章 →</span><span class="pagination-title">第 4 章｜描述統計</span></a></nav><footer class="site-footer">© <span id="current-year"></span> R 統計學教室．Built for GitHub Pages.</footer></main><aside class="page-toc"><p class="toc-title">On This Page</p><ul id="page-toc-list"></ul></aside></div><div id="backdrop" class="backdrop"></div><script src="../assets/js/site.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta
+    name="description"
+    content="R 統計學教室第 3 章：敘述統計、離散程度與相關性分析"
+  >
+
+  <title>第 3 章｜敘述統計與相關性分析｜R 統計學教室</title>
+
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body data-chapter="03">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">
+    <span class="brand-mark">R</span>
+    <span>R 統計學教室</span>
+  </a>
+
+  <div class="header-actions">
+    <a class="header-link" href="../index.html">回首頁</a>
+
+    <button
+      id="menu-button"
+      class="menu-button"
+      type="button"
+      aria-label="開啟章節選單"
+    >
+      ☰ 目錄
+    </button>
+  </div>
+</header>
+
+<div class="site-layout">
+
+  <aside class="sidebar" aria-label="課程章節導覽">
+    <p class="sidebar-title">Course Menu</p>
+    <ul id="chapter-nav" class="chapter-nav"></ul>
+  </aside>
+
+  <main class="content">
+
+    <section class="hero">
+      <p class="eyebrow">Chapter 03</p>
+
+      <h1>敘述統計與相關性分析</h1>
+
+      <p class="lead">
+        使用 R 計算集中趨勢、離散程度、風險指標與變數之間的線性關係
+      </p>
+    </section>
+
+    <section>
+      <h2 id="goals">本章學習目標</h2>
+
+      <ul>
+        <li>複習平均數、中位數與眾數。</li>
+        <li>理解幾何平均與加權平均的使用時機。</li>
+        <li>計算全距、變異數、標準差、MAD 與變異係數。</li>
+        <li>區分樣本統計量與母體統計量。</li>
+        <li>理解共變異數與相關係數的差異。</li>
+        <li>能使用 Sharpe Ratio 評估風險調整後報酬。</li>
+        <li>能繪製散佈圖並加入線性迴歸趨勢線。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 id="data">1. 建立範例資料</h2>
+
+      <p>
+        本章使用以下兩組資料進行示範。假設
+        <code>x</code> 為讀書時間，<code>y</code> 為考試成績。
+      </p>
+
+      <pre><code>x &lt;- c(2, 3, 4, 5, 6, 7, 8, 9)
+
+y &lt;- c(55, 60, 65, 68, 72, 78, 82, 88)
+
+df &lt;- data.frame(
+  study_hours = x,
+  score = y
+)
+
+df</code></pre>
+    </section>
+
+    <section>
+      <h2 id="central-tendency">2. 集中趨勢</h2>
+
+      <p>
+        集中趨勢用來描述一組資料的中心位置，常見指標包括平均數、
+        中位數與眾數。
+      </p>
+
+      <h3 id="mean">平均數（Mean）</h3>
+
+      <p>
+        平均數是所有觀察值加總後，再除以觀察值的數量。
+      </p>
+
+      <div class="callout">
+        平均數 = 所有觀察值總和 ÷ 觀察值數量
+      </div>
+
+      <pre><code>scores &lt;- c(60, 65, 70, 70, 75, 80, 90)
+
+mean(scores)</code></pre>
+
+      <p>
+        若資料包含缺失值 <code>NA</code>，可以加入
+        <code>na.rm = TRUE</code>：
+      </p>
+
+      <pre><code>scores &lt;- c(60, 65, 70, NA, 75, 80, 90)
+
+mean(scores, na.rm = TRUE)</code></pre>
+
+      <h3 id="median">中位數（Median）</h3>
+
+      <p>
+        中位數是將資料由小到大排列後，位於中間位置的數值。
+        它較不容易受到極端值影響。
+      </p>
+
+      <pre><code>median(scores, na.rm = TRUE)</code></pre>
+
+      <h3 id="mode">眾數（Mode）</h3>
+
+      <p>
+        眾數是資料中出現次數最多的數值。R 的
+        <code>mode()</code> 並不是用來計算統計眾數，因此需要自行建立函數。
+      </p>
+
+      <pre><code>get_mode &lt;- function(x) {
+  x &lt;- x[!is.na(x)]
+
+  values &lt;- unique(x)
+
+  values[
+    which.max(tabulate(match(x, values)))
+  ]
+}
+
+scores &lt;- c(60, 65, 70, 70, 75, 80, 90)
+
+get_mode(scores)</code></pre>
+
+      <div class="callout">
+        平均數容易受到極端值影響；中位數較穩健；眾數則適合找出最常出現的數值或類別。
+      </div>
+    </section>
+
+    <section>
+      <h2 id="other-means">3. 其他平均數</h2>
+
+      <h3 id="geometric-mean">幾何平均（Geometric Mean）</h3>
+
+      <p>
+        幾何平均常用於成長率、報酬率或倍數資料。其概念是將數值相乘後，
+        再取觀察值數量的次方根。
+      </p>
+
+      <div class="callout">
+        幾何平均只能直接套用在正數資料上。
+      </div>
+
+      <pre><code>growth_rates &lt;- c(1.05, 1.08, 0.97, 1.10)
+
+geometric_mean &lt;- prod(growth_rates)^(1 / length(growth_rates))
+
+geometric_mean</code></pre>
+
+      <p>
+        也可以利用對數進行計算：
+      </p>
+
+      <pre><code>geometric_mean &lt;- exp(
+  mean(log(growth_rates))
+)
+
+geometric_mean</code></pre>
+
+      <h3 id="weighted-mean">加權平均（Weighted Mean）</h3>
+
+      <p>
+        當不同觀察值的重要程度不相同時，可以使用加權平均。
+      </p>
+
+      <div class="callout">
+        加權平均 = 各數值乘以權重後的總和 ÷ 權重總和
+      </div>
+
+      <pre><code>scores &lt;- c(80, 75, 90)
+
+weights &lt;- c(0.3, 0.3, 0.4)
+
+weighted.mean(
+  scores,
+  weights
+)</code></pre>
+
+      <p>
+        例如期中考占 30%、期末考占 30%、報告占 40%，便可利用加權平均計算總成績。
+      </p>
+    </section>
+
+    <section>
+      <h2 id="dispersion">4. 離散程度</h2>
+
+      <p>
+        離散程度用來描述資料彼此之間的差異，以及資料距離中心位置的分散程度。
+      </p>
+
+      <h3 id="range">全距（Range）</h3>
+
+      <p>
+        全距是資料最大值與最小值之差。
+      </p>
+
+      <div class="callout">
+        全距 = 最大值 − 最小值
+      </div>
+
+      <pre><code>scores &lt;- c(60, 65, 70, 75, 80, 90)
+
+max(scores) - min(scores)</code></pre>
+
+      <p>
+        也可以先使用 <code>range()</code> 找出最小值與最大值：
+      </p>
+
+      <pre><code>range(scores)
+
+diff(range(scores))</code></pre>
+
+      <h3 id="variance">變異數（Variance）</h3>
+
+      <p>
+        變異數衡量資料與平均數之間的平方差距。
+        R 的 <code>var()</code> 預設計算的是<strong>樣本變異數</strong>。
+      </p>
+
+      <pre><code># 樣本變異數
+var(scores)</code></pre>
+
+      <p>
+        樣本變異數的分母為 <code>n - 1</code>。若資料代表完整母體，
+        母體變異數的分母應使用 <code>n</code>。
+      </p>
+
+      <pre><code># 母體變異數
+population_variance &lt;- mean(
+  (scores - mean(scores))^2
+)
+
+population_variance</code></pre>
+
+      <h3 id="standard-deviation">標準差（Standard Deviation）</h3>
+
+      <p>
+        標準差是變異數的平方根，單位與原始資料相同，因此通常比變異數更容易解讀。
+      </p>
+
+      <pre><code># 樣本標準差
+sd(scores)</code></pre>
+
+      <pre><code># 母體標準差
+population_sd &lt;- sqrt(
+  mean((scores - mean(scores))^2)
+)
+
+population_sd</code></pre>
+
+      <div class="callout">
+        R 的 <code>var()</code> 與 <code>sd()</code> 預設使用樣本公式，分母為 n − 1。
+      </div>
+    </section>
+
+    <section>
+      <h2 id="mad">5. MAD</h2>
+
+      <p>
+        MAD 通常指中位數絕對偏差
+        （Median Absolute Deviation），用來衡量資料與中位數之間的偏離程度。
+      </p>
+
+      <p>
+        由於 MAD 以中位數為中心，因此比標準差更不容易受到極端值影響。
+      </p>
+
+      <pre><code>scores &lt;- c(60, 65, 70, 75, 80, 90, 200)
+
+mad(scores)</code></pre>
+
+      <p>
+        R 的 <code>mad()</code> 預設會乘上一個調整常數，使結果在常態分布下能與標準差比較。
+        若希望計算未調整的中位數絕對偏差，可以設定：
+      </p>
+
+      <pre><code>mad(
+  scores,
+  constant = 1
+)</code></pre>
+
+      <p>
+        也可以自行計算：
+      </p>
+
+      <pre><code>median(
+  abs(scores - median(scores))
+)</code></pre>
+
+      <div class="callout">
+        當資料中可能存在離群值時，MAD 通常比標準差更穩健。
+      </div>
+    </section>
+
+    <section>
+      <h2 id="cv">6. 變異係數（Coefficient of Variation）</h2>
+
+      <p>
+        變異係數簡稱 CV，是標準差與平均數的比值，用來衡量相對分散程度。
+      </p>
+
+      <div class="callout">
+        CV = 標準差 ÷ 平均數
+      </div>
+
+      <p>
+        CV 沒有單位，因此可以用來比較單位不同或平均水準不同的資料。
+      </p>
+
+      <h3 id="sample-cv">樣本變異係數</h3>
+
+      <pre><code>scores &lt;- c(60, 65, 70, 75, 80, 90)
+
+sample_cv &lt;- sd(scores) / mean(scores)
+
+sample_cv</code></pre>
+
+      <p>若希望以百分比呈現：</p>
+
+      <pre><code>sample_cv_percent &lt;- (
+  sd(scores) / mean(scores)
+) * 100
+
+sample_cv_percent</code></pre>
+
+      <h3 id="population-cv">母體變異係數</h3>
+
+      <pre><code>population_sd &lt;- sqrt(
+  mean((scores - mean(scores))^2)
+)
+
+population_cv &lt;- population_sd / mean(scores)
+
+population_cv</code></pre>
+
+      <pre><code>population_cv_percent &lt;- population_cv * 100
+
+population_cv_percent</code></pre>
+
+      <div class="callout">
+        CV 通常適用於平均數為正且具有比例尺度的資料。當平均數接近 0 時，CV 可能非常大或失去解釋意義。
+      </div>
+    </section>
+
+    <section>
+      <h2 id="covariance">7. 共變異數（Covariance）</h2>
+
+      <p>
+        共變異數用來描述兩個變數是否傾向一起變動。
+      </p>
+
+      <ul>
+        <li>共變異數大於 0：兩個變數大致同方向變動。</li>
+        <li>共變異數小於 0：兩個變數大致反方向變動。</li>
+        <li>共變異數接近 0：兩者可能沒有明顯的線性共同變動。</li>
+      </ul>
+
+      <h3 id="sample-covariance">樣本共變異數</h3>
+
+      <p>
+        R 的 <code>cov()</code> 預設計算樣本共變異數。
+      </p>
+
+      <pre><code>x &lt;- c(2, 3, 4, 5, 6, 7, 8, 9)
+
+y &lt;- c(55, 60, 65, 68, 72, 78, 82, 88)
+
+cov(x, y)</code></pre>
+
+      <h3 id="population-covariance">母體共變異數</h3>
+
+      <pre><code>population_covariance &lt;- mean(
+  (x - mean(x)) *
+  (y - mean(y))
+)
+
+population_covariance</code></pre>
+
+      <div class="callout">
+        共變異數會受到資料單位影響，因此通常不適合直接比較不同變數組合的關係強弱。
+      </div>
+    </section>
+
+    <section>
+      <h2 id="correlation">8. 相關係數（Correlation）</h2>
+
+      <p>
+        相關係數將共變異數標準化，數值介於 −1 與 1 之間。
+      </p>
+
+      <ul>
+        <li>接近 1：強烈正線性關係。</li>
+        <li>接近 −1：強烈負線性關係。</li>
+        <li>接近 0：線性關係較弱。</li>
+      </ul>
+
+      <pre><code>cor(x, y)</code></pre>
+
+      <p>
+        <code>cor()</code> 預設計算 Pearson 相關係數：
+      </p>
+
+      <pre><code>cor(
+  x,
+  y,
+  method = "pearson"
+)</code></pre>
+
+      <p>
+        若資料為順序尺度、存在離群值，或關係並非線性但大致單調，
+        可以考慮 Spearman 等級相關係數：
+      </p>
+
+      <pre><code>cor(
+  x,
+  y,
+  method = "spearman"
+)</code></pre>
+
+      <div class="callout">
+        相關不代表因果。即使兩個變數高度相關，也不能只憑相關係數認定其中一個變數造成另一個變數改變。
+      </div>
+    </section>
+
+    <section>
+      <h2 id="correlation-matrix">9. 相關矩陣</h2>
+
+      <p>
+        當資料中有多個數值變數時，可以使用 <code>cor()</code>
+        一次計算所有變數兩兩之間的相關係數。
+      </p>
+
+      <pre><code>df &lt;- data.frame(
+  study_hours = c(2, 3, 4, 5, 6, 7, 8, 9),
+  attendance = c(65, 70, 72, 75, 80, 85, 88, 92),
+  score = c(55, 60, 65, 68, 72, 78, 82, 88)
+)
+
+cor(df)</code></pre>
+
+      <p>
+        若資料中包含缺失值，可以使用：
+      </p>
+
+      <pre><code>cor(
+  df,
+  use = "complete.obs"
+)</code></pre>
+    </section>
+
+    <section>
+      <h2 id="sharpe-ratio">10. Sharpe Ratio</h2>
+
+      <p>
+        Sharpe Ratio 用來衡量每承擔一單位風險所獲得的超額報酬，
+        常見於投資績效與金融風險分析。
+      </p>
+
+      <div class="callout">
+        Sharpe Ratio =（平均報酬率 − 無風險報酬率）÷ 報酬率標準差
+      </div>
+
+      <pre><code>returns &lt;- c(
+  0.03, 0.02, -0.01, 0.04,
+  0.015, 0.025, -0.005, 0.035
+)
+
+risk_free_rate &lt;- 0.002
+
+sharpe_ratio &lt;- (
+  mean(returns) - risk_free_rate
+) / sd(returns)
+
+sharpe_ratio</code></pre>
+
+      <p>
+        Sharpe Ratio 越高，通常表示相對於承擔的風險，獲得的超額報酬越高。
+      </p>
+
+      <div class="callout">
+        報酬率與無風險利率必須使用相同期間。例如月報酬率應搭配月無風險利率，不能直接混用年利率。
+      </div>
+
+      <p>
+        若使用月報酬率，並希望將 Sharpe Ratio 年化，可以乘以
+        <code>sqrt(12)</code>：
+      </p>
+
+      <pre><code>annualized_sharpe &lt;- sharpe_ratio * sqrt(12)
+
+annualized_sharpe</code></pre>
+    </section>
+
+    <section>
+      <h2 id="summary-function">11. 快速查看敘述統計</h2>
+
+      <p>
+        R 的 <code>summary()</code> 可以快速顯示最小值、第一四分位數、
+        中位數、平均數、第三四分位數與最大值。
+      </p>
+
+      <pre><code>scores &lt;- c(60, 65, 70, 75, 80, 90)
+
+summary(scores)</code></pre>
+
+      <p>
+        若資料為 Data Frame，也可以一次查看多個欄位：
+      </p>
+
+      <pre><code>summary(df)</code></pre>
+    </section>
+
+    <section>
+      <h2 id="scatterplot">12. 散佈圖與線性趨勢線</h2>
+
+      <p>
+        散佈圖可以呈現兩個數值變數之間的關係。
+        若點大致沿著直線方向分布，表示兩個變數可能存在線性關係。
+      </p>
+
+      <h3 id="base-scatterplot">使用 Base R</h3>
+
+      <pre><code>x &lt;- c(2, 3, 4, 5, 6, 7, 8, 9)
+
+y &lt;- c(55, 60, 65, 68, 72, 78, 82, 88)
+
+plot(
+  x,
+  y,
+  main = "Study Hours and Scores",
+  xlab = "Study Hours",
+  ylab = "Score",
+  pch = 19,
+  col = "#6FA8DC"
+)
+
+model &lt;- lm(y ~ x)
+
+abline(
+  model,
+  col = "#E07A5F",
+  lwd = 2
+)</code></pre>
+
+      <p>
+        <code>lm(y ~ x)</code> 建立簡單線性迴歸模型，
+        <code>abline()</code> 則將迴歸直線加入散佈圖。
+      </p>
+
+      <h3 id="ggplot-scatterplot">使用 ggplot2</h3>
+
+      <pre><code>library(ggplot2)
+
+df &lt;- data.frame(
+  study_hours = c(2, 3, 4, 5, 6, 7, 8, 9),
+  score = c(55, 60, 65, 68, 72, 78, 82, 88)
+)
+
+ggplot(
+  df,
+  aes(
+    x = study_hours,
+    y = score
+  )
+) +
+  geom_point(
+    size = 3,
+    color = "#6FA8DC"
+  ) +
+  geom_smooth(
+    method = "lm",
+    se = TRUE,
+    color = "#E07A5F",
+    fill = "#F6D6CC"
+  ) +
+  labs(
+    title = "Study Hours and Scores",
+    subtitle = "Linear regression trend line",
+    x = "Study Hours",
+    y = "Score"
+  ) +
+  theme_minimal()</code></pre>
+
+      <p>
+        在 <code>geom_smooth()</code> 中：
+      </p>
+
+      <ul>
+        <li><code>method = "lm"</code>：使用線性迴歸模型。</li>
+        <li><code>se = TRUE</code>：顯示信賴區間。</li>
+        <li><code>color</code>：設定趨勢線顏色。</li>
+        <li><code>fill</code>：設定信賴區間顏色。</li>
+      </ul>
+
+      <div class="callout">
+        趨勢線可以幫助判斷變數之間的大致方向，但仍應搭配相關係數、迴歸結果與資料背景進行解讀。
+      </div>
+    </section>
+
+    <section>
+      <h2 id="comparison">13. 指標比較</h2>
+
+      <div class="callout">
+        <strong>集中趨勢：</strong>
+        平均數、中位數、眾數、幾何平均、加權平均
+        <br><br>
+
+        <strong>絕對離散程度：</strong>
+        全距、變異數、標準差、MAD
+        <br><br>
+
+        <strong>相對離散程度：</strong>
+        變異係數 CV
+        <br><br>
+
+        <strong>兩變數共同變動：</strong>
+        共變異數
+        <br><br>
+
+        <strong>線性關係強度：</strong>
+        相關係數
+        <br><br>
+
+        <strong>風險調整後報酬：</strong>
+        Sharpe Ratio
+      </div>
+    </section>
+
+    <section>
+      <h2 id="common-errors">14. 常見錯誤</h2>
+
+      <ul>
+        <li>將 R 的 <code>mode()</code> 誤認為統計上的眾數。</li>
+        <li>未區分樣本標準差與母體標準差。</li>
+        <li>平均數接近 0 時仍直接使用 CV。</li>
+        <li>將相關關係直接解釋為因果關係。</li>
+        <li>比較 Sharpe Ratio 時使用不同期間的報酬率。</li>
+        <li>看到相關係數接近 0，就認定兩個變數完全沒有任何關係。</li>
+        <li>只看趨勢線，沒有檢查離群值或非線性關係。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 id="practice">練習題</h2>
+
+      <ol>
+        <li>
+          建立一組數值資料，計算平均數、中位數與眾數。
+        </li>
+
+        <li>
+          計算該資料的全距、樣本變異數與樣本標準差。
+        </li>
+
+        <li>
+          自行計算母體變異數與母體標準差。
+        </li>
+
+        <li>
+          計算樣本 CV 與母體 CV，並以百分比呈現。
+        </li>
+
+        <li>
+          使用兩組資料計算共變異數與 Pearson 相關係數。
+        </li>
+
+        <li>
+          使用一組月報酬率計算 Sharpe Ratio。
+        </li>
+
+        <li>
+          使用 ggplot2 繪製散佈圖並加入線性趨勢線。
+        </li>
+
+        <li>
+          說明為什麼相關係數高不一定代表存在因果關係。
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2 id="chapter-summary">本章重點整理</h2>
+
+      <ul>
+        <li>平均數、中位數與眾數用來描述資料的中心位置。</li>
+        <li>幾何平均適合成長倍數，加權平均適合不同重要程度的資料。</li>
+        <li>全距、變異數、標準差與 MAD 可描述資料的離散程度。</li>
+        <li>R 的 <code>var()</code> 與 <code>sd()</code> 預設使用樣本公式。</li>
+        <li>CV 可比較不同尺度資料的相對分散程度。</li>
+        <li>共變異數反映共同變動方向，但會受到單位影響。</li>
+        <li>相關係數介於 −1 與 1 之間，但相關不代表因果。</li>
+        <li>Sharpe Ratio 用來衡量每單位風險所帶來的超額報酬。</li>
+        <li>散佈圖搭配線性趨勢線，可協助觀察兩個變數的線性關係。</li>
+      </ul>
+    </section>
+
+    <nav class="chapter-pagination" aria-label="章節切換">
+
+      <a href="ch02.html">
+        <span class="pagination-label">← 上一章</span>
+        <span class="pagination-title">
+          第 2 章｜資料讀取與繪圖
+        </span>
+      </a>
+
+      <a href="ch04.html">
+        <span class="pagination-label">下一章 →</span>
+        <span class="pagination-title">
+          第 4 章｜描述統計
+        </span>
+      </a>
+
+    </nav>
+
+    <footer class="site-footer">
+      © <span id="current-year"></span>
+      R 統計學教室．Built for GitHub Pages.
+    </footer>
+
+  </main>
+
+  <aside class="page-toc" aria-label="本頁目錄">
+    <p class="toc-title">On This Page</p>
+    <ul id="page-toc-list"></ul>
+  </aside>
+
+</div>
+
+<div id="backdrop" class="backdrop"></div>
+
+<script src="../assets/js/site.js"></script>
+
+</body>
+</html>
